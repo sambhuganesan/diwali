@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Diya Lamp</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #000;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+        }
+
+        .diya {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 320px;
+            height: 180px;
+        }
+
+        .diya-body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .diya-base {
+            position: absolute;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 90px;
+            background: linear-gradient(to top, #7d1c19 0%, #b32d29 20%, #6b0f0b 100%);
+            border-radius: 0 0 160px 160px / 0 0 90px 90px;
+            box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        .diya-base svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .diya-bowl {
+            position: absolute;
+            bottom: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 70px;
+            background: radial-gradient(ellipse at center top, #c85a3a 0%, #b8482d 30%, #a03820 60%, #8b2f18 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: inset 0 -8px 15px rgba(0, 0, 0, 0.4), inset 0 5px 10px rgba(255, 130, 70, 0.3), 0 10px 30px rgba(255, 100, 30, 0.4);
+            z-index: 10;
+        }
+
+        .oil-surface {
+            position: absolute;
+            bottom: 125px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 240px;
+            height: 35px;
+            background: radial-gradient(ellipse at center, rgba(255, 140, 40, 0.3) 0%, rgba(180, 80, 30, 0.4) 100%);
+            border-radius: 50%;
+            z-index: 11;
+        }
+
+        .wick-base {
+            position: absolute;
+            bottom: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(to top, #3a2416 0%, #4a3020 50%, #5a4030 100%);
+            border-radius: 2px;
+            z-index: 12;
+        }
+
+        .flame-container {
+            position: absolute;
+            bottom: 205px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 80px;
+            z-index: 15;
+        }
+
+        .flame {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 35px;
+            height: 65px;
+            background: linear-gradient(to top, #ff6b00 0%, #ff8800 20%, #ffaa00 40%, #ffcc00 60%, #ffee00 80%, #ffffaa 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            filter: blur(1px);
+            animation: flicker 2s ease-in-out infinite;
+        }
+
+        .flame::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 45px;
+            background: linear-gradient(to top, rgba(255, 200, 100, 0.9) 0%, rgba(255, 230, 150, 0.95) 50%, rgba(255, 255, 240, 1) 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            filter: blur(0.5px);
+        }
+
+        .flame-glow {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle, rgba(255, 180, 80, 0.6) 0%, rgba(255, 140, 60, 0.4) 30%, rgba(255, 100, 40, 0.2) 50%, transparent 70%);
+            border-radius: 50%;
+            animation: glow 2s ease-in-out infinite;
+            z-index: 14;
+        }
+
+        .light-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(255, 140, 60, 0.2) 0%, rgba(255, 100, 40, 0.1) 30%, rgba(255, 80, 30, 0.05) 50%, transparent 70%);
+            border-radius: 50%;
+            animation: ambient-glow 3s ease-in-out infinite;
+        }
+
+        .shadow {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 350px;
+            height: 40px;
+            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 50%, transparent 80%);
+            border-radius: 50%;
+            z-index: 4;
+        }
+
+        .firework {
+            position: absolute;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .greeting {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: #ffcc00;
+            text-shadow: 0 0 20px rgba(255, 204, 0, 0.8), 0 0 40px rgba(255, 140, 0, 0.6);
+            opacity: 0;
+            z-index: 25;
+            white-space: nowrap;
+            letter-spacing: 2px;
+        }
+
+        .greeting span {
+            display: inline-block;
+            animation: curve-float 3s ease-in-out infinite;
+        }
+
+        .greeting span:nth-child(1) {
+            transform: translateY(0px);
+            animation-delay: 0s;
+        }
+
+        .greeting span:nth-child(2) {
+            transform: translateY(-3px);
+            animation-delay: 0.1s;
+        }
+
+        .greeting span:nth-child(3) {
+            transform: translateY(-5px);
+            animation-delay: 0.2s;
+        }
+
+        .greeting span:nth-child(4) {
+            transform: translateY(-7px);
+            animation-delay: 0.3s;
+        }
+
+        .greeting span:nth-child(5) {
+            transform: translateY(-8px);
+            animation-delay: 0.4s;
+        }
+
+        .greeting span:nth-child(6) {
+            transform: translateY(-9px);
+            animation-delay: 0.5s;
+        }
+
+        .greeting span:nth-child(7) {
+            transform: translateY(-8px);
+            animation-delay: 0.6s;
+        }
+
+        .greeting span:nth-child(8) {
+            transform: translateY(-7px);
+            animation-delay: 0.7s;
+        }
+
+        .greeting span:nth-child(9) {
+            transform: translateY(-5px);
+            animation-delay: 0.8s;
+        }
+
+        .greeting span:nth-child(10) {
+            transform: translateY(-3px);
+            animation-delay: 0.9s;
+        }
+
+        .greeting span:nth-child(11) {
+            transform: translateY(-1px);
+            animation-delay: 1s;
+        }
+
+        .greeting span:nth-child(12) {
+            transform: translateY(0px);
+            animation-delay: 1.1s;
+        }
+
+        .greeting.show {
+            opacity: 1;
+        }
+
+        @keyframes curve-float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes flicker {
+
+            0%,
+            100% {
+                transform: translateX(-50%) scaleY(1);
+                opacity: 1;
+            }
+
+            25% {
+                transform: translateX(-50%) scaleY(1.05) scaleX(0.98);
+                opacity: 0.95;
+            }
+
+            50% {
+                transform: translateX(-50%) scaleY(0.98) scaleX(1.02);
+                opacity: 0.98;
+            }
+
+            75% {
+                transform: translateX(-50%) scaleY(1.03) scaleX(0.99);
+                opacity: 0.96;
+            }
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                opacity: 0.6;
+                transform: translateX(-50%) scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+
+        @keyframes ambient-glow {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="light-glow"></div>
+        <div class="shadow"></div>
+        <div class="diya">
+            <div class="diya-body">
+                <div class="diya-base"></div>
+                <div class="diya-bowl"></div>
+                <div class="oil-surface"></div>
+                <div class="wick-base"></div>
+            </div>
+        </div>
+        <div class="flame-container">
+            <div class="flame-glow"></div>
+            <div class="flame"></div>
+        </div>
+        <div class="greeting"></div>
+    </div>
+
+    <script>
+        const container = document.querySelector('.container');
+        const flameContainer = document.querySelector('.flame-container');
+        const greeting = document.querySelector('.greeting');
+
+        let fireworkCount = 0;
+        let isHovering = false;
+        let lastFirework = 0;
+        let greetingShown = false;
+
+        // Get flame position
+        function getFlamePosition() {
+            const rect = flameContainer.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            return {
+                x: rect.left + rect.width / 2 - containerRect.left,
+                y: rect.top - containerRect.top + 20
+            };
+        }
+
+        // Check if mouse is near flame
+        function isNearFlame(mouseX, mouseY) {
+            const flamePos = getFlamePosition();
+            const distance = Math.sqrt(
+                Math.pow(mouseX - flamePos.x, 2) +
+                Math.pow(mouseY - flamePos.y, 2)
+            );
+            return distance < 100;
+        }
+
+        // Create firework
+        function createFirework() {
+            const now = Date.now();
+            if (now - lastFirework < 200) return;
+            lastFirework = now;
+
+            fireworkCount++;
+
+            const flamePos = getFlamePosition();
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = flamePos.x + 'px';
+            firework.style.bottom = (400 - flamePos.y) + 'px';
+            container.appendChild(firework);
+
+            // Launch upward
+            const launchHeight = 100 + Math.random() * 100;
+            const launchDuration = 800 + Math.random() * 400;
+
+            let currentY = 0;
+            const launchInterval = setInterval(() => {
+                currentY += 5;
+                firework.style.transform = `translateY(-${currentY}px)`;
+
+                if (currentY >= launchHeight) {
+                    clearInterval(launchInterval);
+                    explode(firework, flamePos.x, flamePos.y - currentY);
+                }
+            }, 16);
+
+            // Show greeting after multiple fireworks
+            if (fireworkCount >= 5 && !greetingShown) {
+                greetingShown = true;
+                showGreeting();
+            }
+        }
+
+        // Explode firework
+        function explode(firework, x, y) {
+            const colors = ['#ff6b6b', '#ffd93d', '#6bcf7f', '#4d96ff', '#ff6bff', '#ffaa00'];
+            const particleCount = 30 + Math.floor(Math.random() * 20);
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.left = '0px';
+                particle.style.top = '0px';
+                particle.style.boxShadow = `0 0 10px ${particle.style.backgroundColor}`;
+
+                firework.appendChild(particle);
+
+                const angle = (Math.PI * 2 * i) / particleCount;
+                const velocity = 2 + Math.random() * 3;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+
+                let px = 0, py = 0;
+                let opacity = 1;
+                let life = 0;
+
+                const particleInterval = setInterval(() => {
+                    life++;
+                    px += vx;
+                    py += vy;
+                    opacity -= 0.015;
+
+                    particle.style.transform = `translate(${px}px, ${py}px)`;
+                    particle.style.opacity = opacity;
+
+                    if (opacity <= 0 || life > 100) {
+                        clearInterval(particleInterval);
+                        particle.remove();
+                    }
+                }, 16);
+            }
+
+            setTimeout(() => {
+                firework.remove();
+            }, 2000);
+        }
+
+        // Show greeting with typing animation
+        function showGreeting() {
+            const text = 'H' + 'a' + 'p' + 'p' + 'y' + '\u00A0' + 'D' + 'i' + 'w' + 'a' + 'l' + 'i';
+            let index = 0;
+
+            greeting.classList.add('show');
+
+            const typeInterval = setInterval(() => {
+                const char = text[index];
+                const span = document.createElement('span');
+                span.textContent = char;
+                greeting.appendChild(span);
+                index++;
+
+                if (index >= text.length) {
+                    clearInterval(typeInterval);
+                }
+            }, 150);
+        }
+
+        // Mouse move handler
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            if (isNearFlame(mouseX, mouseY)) {
+                if (!isHovering) {
+                    isHovering = true;
+                }
+                createFirework();
+            } else {
+                isHovering = false;
+            }
+        });
+
+        container.addEventListener('mouseleave', () => {
+            isHovering = false;
+        });
+    </script>
+</body>
+
+</html>
